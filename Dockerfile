@@ -8,6 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./codigo/ /app
 
-EXPOSE 8000
-
-CMD ["fastapi", "dev", "./codigo/main.py"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
