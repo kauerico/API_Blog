@@ -39,7 +39,7 @@ async def create_post(post: PostBase, db: db_dependency):
 async def read_post(post_id: int, db: db_dependency):
     post = db.query(models.Post).filter(models.Post.id == post_id).first()
     if post is None:
-        HTTPException(status_code=404, detail='Post não foi encontrado')
+        HTTPException(status_code=404, detail='Post não foi encontrado!')
     return post
 
 
@@ -48,7 +48,7 @@ async def delete_post(post_id: int, db:db_dependency):
     db_post = db.query(models.Post).filter(models.Post.id == post_id).first()
     
     if db_post is None:
-        raise HTTPException(status_code=404, detail='Post não foi encontrado')
+        raise HTTPException(status_code=404, detail='Post não foi encontrado!')
     db.delete(db_post)
     db.commit()
 
@@ -63,6 +63,6 @@ async def read_user(user_id: int, db: db_dependency):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Usuário não encontrado!")
     
     return user
