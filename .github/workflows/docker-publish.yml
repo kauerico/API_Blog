@@ -1,0 +1,45 @@
+# Nome do fluxo de trabalho
+name: Build e Push uma imagem Docker para o Docker Hub
+
+# Configuração do gatilho
+on:
+  push:
+    branches: "main"
+
+# Configurando as variáveis de ambiente
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: kauekuekueca/kaue-api-blog
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build a imagem Docker
+        run: docker-compose build --no-cache --force-rm
+
+      - name: Configurar o Docker Build
+        uses: docker/setup-buildx-action@v2
+
+      - name: Fazer o login no Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          labels: ${{ steps.meta.outputs.labels }}
