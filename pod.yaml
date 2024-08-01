@@ -6,3 +6,5 @@ spec:
   containers:
   - name: blog
     image: kauekuekueca/kaue-api-blog:latest
+    ports: 
+    - containerPort: 8000
